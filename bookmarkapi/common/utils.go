@@ -48,7 +48,7 @@ func initConfig() {
 
 // Reads config.json and decode into AppConfig
 func loadAppConfig() {
-	file, err := os.Open("C:\\dev\\GoProjects\\go-recipes-master\\ch07\\bookmarkapi\\common\\config.json")
+	file, err := os.Open("bookmarkapi/common/config.json")
 	defer file.Close()
 	if err != nil {
 		log.Fatalf("[loadConfig]: %s\n", err)

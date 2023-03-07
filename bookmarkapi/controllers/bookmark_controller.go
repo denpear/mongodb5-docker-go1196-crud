@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"gopkg.in/mgo.v2"
 	"net/http"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	"gopkg.in/mgo.v2/bson"
-
 	"mongo-docker-go-crud/bookmarkapi/common"
 	"mongo-docker-go-crud/bookmarkapi/store"
 )
@@ -69,6 +70,58 @@ func CreateBookmark(w http.ResponseWriter, r *http.Request) {
 	// Write the JSON data to the ResponseWriter
 	w.Write(j)
 
+}
+
+func CreatePostgresBookmarks(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var dataResource BookmarkResourcePdb
+	// Decode the incoming Bookmark json
+	err := json.NewDecoder(r.Body).Decode(&dataResource)
+	if err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"Invalid Bookmark data",
+			500,
+		)
+		return
+	}
+
+	bookmark := &dataResource.Data
+	// Takes user name from Context
+	user := r.Context().Value("user")
+	if user != nil {
+		bookmark.CreatedBy = user.(string)
+	}
+	bookmark.UUID = uuid.New().String()
+	bookmark.CreatedOn = time.Now()
+	//Add bookmark into PostgresDb
+	common.PostgresConn.Save(bookmark)
+	if err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"Invalid Bookmark data",
+			500,
+		)
+		return
+	}
+	j, err := json.Marshal(BookmarkResourcePdb{Data: *bookmark})
+	// If error is occured,
+	// Send JSON response using helper function common.DisplayAppError
+	if err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"An unexpected error has occurred",
+			500,
+		)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	// Write the JSON data to the ResponseWriter
+	w.Write(j)
 }
 
 // GetBookmarks returns all Bookmark documents

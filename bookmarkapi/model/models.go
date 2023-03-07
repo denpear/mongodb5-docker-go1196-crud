@@ -26,4 +26,20 @@ type (
 		CreatedOn   time.Time     `json:"createdon,omitempty"`
 		Tags        []string      `json:"tags,omitempty"`
 	}
+
+	// Bookmark type represents the metadata of a bookmark.
+	BookmarkPdb struct {
+		UUID        string    `gorm:"column:uuid,omitempty"`
+		Name        string    `gorm:"column:name"`
+		Description string    `gorm:"column:description"`
+		Location    string    `gorm:"column:location"`
+		Priority    int       `gorm:"column:priority"` // Priority (1 -5)
+		CreatedBy   string    `gorm:"column:createdby"`
+		CreatedOn   time.Time `gorm:"column:createdon,omitempty"`
+		//Tags        []string  `gorm:"column:tags,omitempty"`
+	}
 )
+
+//func (BookmarkPdb) TableName() string {
+//	return "cms.applications"
+//}

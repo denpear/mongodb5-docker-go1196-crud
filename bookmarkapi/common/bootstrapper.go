@@ -10,7 +10,9 @@ func StartUp() {
 	setLogLevel(Level(AppConfig.LogLevel))
 	// Start a MongoDB session
 	createDBSession()
+	// Start a PostrgesDB session
+	initPostrgesDB()
 	// Add indexes into MongoDB
 	addIndexes()
-	GenerateJWT("admin", "admin")
+	//GenerateJWT("admin", "admin")
 }
