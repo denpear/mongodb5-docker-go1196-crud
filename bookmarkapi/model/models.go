@@ -28,18 +28,37 @@ type (
 	}
 
 	// Bookmark type represents the metadata of a bookmark.
-	BookmarkPdb struct {
-		UUID        string    `gorm:"column:uuid,omitempty"`
-		Name        string    `gorm:"column:name"`
-		Description string    `gorm:"column:description"`
-		Location    string    `gorm:"column:location"`
-		Priority    int       `gorm:"column:priority"` // Priority (1 -5)
-		CreatedBy   string    `gorm:"column:createdby"`
-		CreatedOn   time.Time `gorm:"column:createdon,omitempty"`
-		//Tags        []string  `gorm:"column:tags,omitempty"`
+	Applicant struct {
+		ID                  int                 `gorm:"primaryKey"`
+		UUID                string              `gorm:"column:uuid"`
+		LastName            string              `gorm:"column:lastName"`
+		FirstName           string              `gorm:"column:firstName"`
+		MiddleName          string              `gorm:"column:middleName"`
+		ChangeNameFlag      string              `gorm:"column:changeNameFlag"`
+		BirthPlace          string              `gorm:"column:birthPlace"`
+		BirthDate           string              `gorm:"column:birthDate"`
+		SexCode             string              `gorm:"column:sexCode"`
+		PassportSeries      string              `gorm:"column:passportSeries"`
+		PassportNumber      string              `gorm:"column:passportNumber"`
+		CreateDate          string              `gorm:"column:createDate"`
+		UpdateDate          string              `gorm:"column:updateDate"`
+		CreatedBy           string              `gorm:"column:createdby"`
+		ApplicationDateTime time.Time           `gorm:"column:applicationDateTime"`
+		AdditionalOptions   []AdditionalOptions //`json:"AdditionalOptions" gorm:"foreignKey:applicant id"`
 	}
 )
 
-//func (BookmarkPdb) TableName() string {
+type AdditionalOptions struct {
+	ID          int     `json:"id"`
+	UUID        string  `gorm:"column:uuid"`
+	Type        string  `gorm:"column:type"`
+	Name        string  `gorm:"column:name"`
+	Vendor      string  `gorm:"column:vendor"`
+	Price       float32 `gorm:"column:price"`
+	Term        int     `gorm:"column:term"`
+	ApplicantID int     `gorm:"column:applicant_id"`
+}
+
+//func (Applicant) TableName() string {
 //	return "cms.applications"
 //}

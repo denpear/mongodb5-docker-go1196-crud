@@ -19,11 +19,6 @@ type (
 	BookmarkResource struct {
 		Data model.Bookmark `json:"data"`
 	}
-
-	BookmarkResourcePdb struct {
-		Data model.BookmarkPdb `json:"data"`
-	}
-
 	// BookmarksResource for Get - /bookmarks
 	BookmarksResource struct {
 		Data []model.Bookmark `json:"data"`
@@ -40,5 +35,8 @@ type (
 	AuthUserModel struct {
 		User  model.User `json:"user"`
 		Token string     `json:"token"`
+	}
+	ApplicationPrbResource struct {
+		Data model.Applicant `json:"data"`
 	}
 )

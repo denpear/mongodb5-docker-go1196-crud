@@ -3,15 +3,14 @@ package common
 import (
 	_ "encoding/json"
 	"fmt"
-	"log"
-	"mongo-docker-go-crud/bookmarkapi/model"
-	_ "net/http"
-	"os"
-
 	_ "github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
+	"log"
+	"mongo-docker-go-crud/bookmarkapi/model"
+	_ "net/http"
+	"os"
 )
 
 var (
@@ -37,7 +36,10 @@ func initPostrgesDB() {
 	)
 
 	PostgresConn, err = gorm.Open("postgres", conn)
-	PostgresConn.AutoMigrate(model.BookmarkPdb{})
+	PostgresConn.AutoMigrate(model.Applicant{}, model.AdditionalOptions{})
+	//PostgresConn.Model(&model.Applicant{}).AddForeignKey("id", "additional_options(id)", "CASCADE", "CASCADE") - n/a
+	//PostgresConn.Model(&model.AdditionalOption{}).AddForeignKey("id", "additional_options(id)", "CASCADE", "CASCADE")
+	//PostgresConn.Model(&model.AdditionalOption{}).AddForeignKey("id", "additional_options(applicant_id)", "CASCADE", "CASCADE")
 
 	if err != nil {
 		log.Fatal(err)

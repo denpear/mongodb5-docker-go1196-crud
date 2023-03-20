@@ -1,0 +1,32 @@
+{
+  "data" : {
+    "uuid": "test",
+    "lastName":"Markin",
+    "firstName": "Aleksandr",
+    "middleName":"Vadimovich",
+    "changeNameFlag":"N",
+    "birthPlace":"Odintsovo",
+    "birthDate":"1994-03-18",
+    "sexCode":"M",
+    "passportSeries":"1111",
+    "passportNumber":"222222",
+    "createDate":"2023-03-09",
+    "updateDate":"2023-03-09",
+    "AdditionalOptions": [
+      {
+        "type":"test",
+        "name":"test",
+        "vendor":"test",
+        "price":1000.11,
+        "term":1
+      },
+      {
+        "type":"test",
+        "name":"test",
+        "vendor":"test",
+        "price":2000.22,
+        "term":2
+      }
+    ]
+  }
+}

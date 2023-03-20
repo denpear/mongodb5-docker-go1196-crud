@@ -2,15 +2,14 @@ package controllers
 
 import (
 	"encoding/json"
-	"gopkg.in/mgo.v2"
-	"net/http"
-	"time"
-
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"mongo-docker-go-crud/bookmarkapi/common"
 	"mongo-docker-go-crud/bookmarkapi/store"
+	"net/http"
+	"time"
 )
 
 // CreateBookmark insert a new Bookmark.
@@ -72,9 +71,9 @@ func CreateBookmark(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func CreatePostgresBookmarks(w http.ResponseWriter, r *http.Request) {
+func UpdatePostgresBookmarks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	var dataResource BookmarkResourcePdb
+	var dataResource ApplicationPrbResource
 	// Decode the incoming Bookmark json
 	err := json.NewDecoder(r.Body).Decode(&dataResource)
 	if err != nil {
@@ -87,16 +86,27 @@ func CreatePostgresBookmarks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	bookmark := &dataResource.Data
+	application := &dataResource.Data
 	// Takes user name from Context
 	user := r.Context().Value("user")
 	if user != nil {
-		bookmark.CreatedBy = user.(string)
+		application.CreatedBy = user.(string)
 	}
-	bookmark.UUID = uuid.New().String()
-	bookmark.CreatedOn = time.Now()
-	//Add bookmark into PostgresDb
-	common.PostgresConn.Save(bookmark)
+	uuid := uuid.New().String()
+
+	//application = model.Applicant{}
+	application.UUID = uuid
+	application.ApplicationDateTime = time.Now()
+	for index := range application.AdditionalOptions {
+		application.AdditionalOptions[index].UUID = uuid
+	}
+	/*application.CreatedOn = time.Now()
+	application.AdditionalOption[0].UuidID = uuid
+	*/
+	//Add application into PostgresDb
+	common.PostgresConn.Create(&application)
+	//common.PostgresConn.Save(&application.AdditionalOption[0]) //worked!
+	//common.PostgresConn.Create(application.AdditionalOption[0]) //does not work
 	if err != nil {
 		common.DisplayAppError(
 			w,
@@ -106,7 +116,70 @@ func CreatePostgresBookmarks(w http.ResponseWriter, r *http.Request) {
 		)
 		return
 	}
-	j, err := json.Marshal(BookmarkResourcePdb{Data: *bookmark})
+	j, err := json.Marshal(ApplicationPrbResource{Data: *application})
+	// If error is occured,
+	// Send JSON response using helper function common.DisplayAppError
+	if err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"An unexpected error has occurred",
+			500,
+		)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	// Write the JSON data to the ResponseWriter
+	w.Write(j)
+}
+
+func CreatePostgresBookmarks(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var dataResource ApplicationPrbResource
+	// Decode the incoming Bookmark json
+	err := json.NewDecoder(r.Body).Decode(&dataResource)
+	if err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"Invalid Bookmark data",
+			500,
+		)
+		return
+	}
+
+	application := &dataResource.Data
+	// Takes user name from Context
+	user := r.Context().Value("user")
+	if user != nil {
+		application.CreatedBy = user.(string)
+	}
+	uuid := uuid.New().String()
+
+	//application = model.Applicant{}
+	application.UUID = uuid
+	application.ApplicationDateTime = time.Now()
+	for index := range application.AdditionalOptions {
+		application.AdditionalOptions[index].UUID = uuid
+	}
+	/*application.CreatedOn = time.Now()
+	application.AdditionalOption[0].UuidID = uuid
+	*/
+	//Add application into PostgresDb
+	common.PostgresConn.Create(&application)
+	//common.PostgresConn.Save(&application.AdditionalOption[0]) //worked!
+	//common.PostgresConn.Create(application.AdditionalOption[0]) //does not work
+	if err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"Invalid Bookmark data",
+			500,
+		)
+		return
+	}
+	j, err := json.Marshal(ApplicationPrbResource{Data: *application})
 	// If error is occured,
 	// Send JSON response using helper function common.DisplayAppError
 	if err != nil {

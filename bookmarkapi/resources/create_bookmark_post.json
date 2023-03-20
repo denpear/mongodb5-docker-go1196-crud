@@ -1,0 +1,10 @@
+{
+  "data" : {
+    "name" : "Mux2",
+    "description" : "Test 2 json with mongodb",
+    "location" : "http://localhost:8080/bookmarks[2]",
+    "priority" : 1,
+    "createdby" : "denis.grukhin@gmail.com",
+    "tags" : ["go","ch07"]
+  }
+}
